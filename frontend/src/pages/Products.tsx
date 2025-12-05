@@ -52,15 +52,15 @@ const Products: React.FC = () => {
       ) : (
         <>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {data?.data.products.map((product: any) => (
+            {data?.products.map((product: any) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
           
           {/* Pagination */}
-          {data?.data && data.data.totalPages > 1 && (
+          {data?.totalPages > 1 && (
             <div className="flex justify-center mt-8 space-x-2">
-              {Array.from({ length: data.data.totalPages }, (_, i) => (
+              {Array.from({ length: data.totalPages }, (_, i) => (
                 <button
                   key={i + 1}
                   onClick={() => setFilters(prev => ({ ...prev, page: i + 1 }))}

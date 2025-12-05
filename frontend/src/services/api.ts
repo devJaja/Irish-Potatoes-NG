@@ -21,6 +21,12 @@ export const authAPI = {
   forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }),
   sendOTP: (email: string) => api.post('/auth/send-otp', { email }),
   resetPassword: (token: string, newPassword: string) => api.post(`/auth/reset-password/${token}`, { password: newPassword }),
+  updateProfile: (data: Partial<{name: string, phone: string, address: any, avatar: string}>) => api.put('/auth/profile', data),
+  uploadAvatar: (formData: FormData) => api.post('/upload/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }),
 };
 
 export const productsAPI = {
@@ -37,6 +43,10 @@ export const productsAPI = {
 export const ordersAPI = {
   createOrder: (data: any) => api.post('/orders', data),
   getOrder: (id: string) => api.get(`/orders/${id}`),
+  getUsersOrders: async () => {
+    const response = await api.get('/orders');
+    return response.data;
+  },
 };
 
 export default api;

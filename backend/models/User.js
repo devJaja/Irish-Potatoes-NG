@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   },
   role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+  avatar: String, // Add avatar field
   passwordResetToken: String,
   passwordResetExpires: Date,
   otp: String,

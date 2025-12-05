@@ -8,6 +8,7 @@ require('express-async-errors');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+const uploadRoutes = require('./routes/upload'); // Import upload routes
 
 // error handler
 const errorHandlerMiddleware = require('./middleware/errorHandler');
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/upload', uploadRoutes); // Use upload routes
 
 app.use(errorHandlerMiddleware);
 

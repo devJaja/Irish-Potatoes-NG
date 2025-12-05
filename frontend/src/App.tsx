@@ -19,6 +19,8 @@ import AdminProducts from './pages/AdminProducts'; // Import the AdminProducts p
 import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute'; // Import ProtectedAdminRoute
+import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
+import Footer from './components/Footer';
 
 const queryClient = new QueryClient();
 
@@ -34,21 +36,28 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/order-tracking" element={<OrderTracking />} />
-                <Route path="/account" element={<UserAccount />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/send-otp" element={<SendOTP />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />
                 <Route path="/gallery" element={<GalleryPage />} /> {/* Add the new Gallery route */}
+
+                {/* Protected Routes for registered members */}
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/order-tracking" element={<OrderTracking />} />
+                  <Route path="/account" element={<UserAccount />} />
+                </Route>
+                
+                {/* Protected Admin Routes */}
                 <Route path="/admin" element={<ProtectedAdminRoute />}>
                   <Route path="products" element={<AdminProducts />} />
                 </Route>
               </Routes>
             </main>
+            <Footer />
           </Router>
         </CartProvider>
       </AuthProvider>

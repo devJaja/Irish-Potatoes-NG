@@ -40,6 +40,18 @@ const resetPasswordSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const updateProfileSchema = Joi.object({
+  name: Joi.string().optional(),
+  phone: Joi.string().optional(),
+  address: Joi.object({
+    street: Joi.string().required(),
+    state: Joi.string().required(),
+    city: Joi.string().optional(),
+    zipCode: Joi.string().optional()
+  }).optional(),
+  avatar: Joi.string().uri().optional(), // Allow optional avatar URL
+});
+
 // Register
 router.post('/register', async (req, res) => {
   const { error } = registerSchema.validate(req.body);
@@ -67,7 +79,7 @@ router.post('/register', async (req, res) => {
     });
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    res.status(201).json({ token, user: { _id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone, address: user.address, avatar: user.avatar } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error during registration.' });
@@ -86,10 +98,34 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    res.json({ token, user: { _id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone, address: user.address, avatar: user.avatar } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error during login.' });
+  }
+});
+
+// Update User Profile
+router.put('/profile', authenticateToken, async (req, res) => {
+  const { error } = updateProfileSchema.validate(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
+
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+
+    // Update fields if provided
+    if (req.body.name) user.name = req.body.name;
+    if (req.body.phone) user.phone = req.body.phone;
+    if (req.body.address) user.address = req.body.address;
+    if (req.body.avatar) user.avatar = req.body.avatar;
+
+    await user.save();
+
+    res.json({ user: { _id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone, address: user.address, avatar: user.avatar } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error during profile update.' });
   }
 });
 

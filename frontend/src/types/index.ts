@@ -13,10 +13,18 @@ export interface Product {
 }
 
 export interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   role: string;
+  phone: string;
+  address: {
+    street: string;
+    city?: string; // Made optional based on backend schema
+    state: string;
+    zipCode?: string; // Made optional based on backend schema
+  };
+  avatar?: string; // Add optional avatar field
 }
 
 export interface CartItem {

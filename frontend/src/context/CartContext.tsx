@@ -8,6 +8,7 @@ interface CartContextType {
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
+  totalUniqueItems: number;
   totalAmount: number;
 }
 
@@ -58,6 +59,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearCart = () => setItems([]);
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalUniqueItems = items.length; // Number of unique items
   const totalAmount = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
   return (
@@ -68,6 +70,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateQuantity,
       clearCart,
       totalItems,
+      totalUniqueItems,
       totalAmount
     }}>
       {children}
