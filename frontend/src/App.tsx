@@ -12,7 +12,13 @@ import UserAccount from './pages/UserAccount';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import GalleryPage from './pages/GalleryPage'; // Import the new GalleryPage
+import ForgotPassword from './pages/ForgotPassword';
+import SendOTP from './pages/SendOTP';
+import ResetPassword from './pages/ResetPassword';
+import AdminProducts from './pages/AdminProducts'; // Import the AdminProducts page
+import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute'; // Import ProtectedAdminRoute
 
 const queryClient = new QueryClient();
 
@@ -23,6 +29,7 @@ function App() {
         <CartProvider>
           <Router>
             <Header />
+            <Toaster />
             <main className="container mx-auto p-4">
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -33,7 +40,13 @@ function App() {
                 <Route path="/account" element={<UserAccount />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/send-otp" element={<SendOTP />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
                 <Route path="/gallery" element={<GalleryPage />} /> {/* Add the new Gallery route */}
+                <Route path="/admin" element={<ProtectedAdminRoute />}>
+                  <Route path="products" element={<AdminProducts />} />
+                </Route>
               </Routes>
             </main>
           </Router>

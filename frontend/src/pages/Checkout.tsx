@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { AlertCircle, CheckCircle, Info } from 'lucide-react';
-import { nigerianStates } from './Register'; // Re-use Nigerian states list
+import { AlertCircle, Info } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { ordersAPI } from '../services/api';
+import { nigerianStates } from '../utils/nigerianStates';
 
 // Mock API for order submission
-const API = {
-  submitOrder: async (data: CheckoutFormData) => {
-    return new Promise<{ success: boolean; orderId: string; message: string }>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          orderId: 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-          message: 'Order placed successfully!'
-        });
-      }, 1500);
-    });
-  }
-};
+// const API = {
+//   submitOrder: async (data: CheckoutFormData) => {
+//     return new Promise<{ success: boolean; orderId: string; message: string }>((resolve) => {
+//       setTimeout(() => {
+//         resolve({
+//           success: true,
+//           orderId: 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+//           message: 'Order placed successfully!'
+//         });
+//       }, 1500);
+//     });
+//   }
+// };
 
 interface TooltipProps {
   text: string;
@@ -67,8 +69,6 @@ const Checkout: React.FC = () => {
   const [errors, setErrors] = useState<CheckoutFormErrors>({});
   const [touched, setTouched] = useState<{[key in keyof CheckoutFormData]?: boolean}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderSuccess, setOrderSuccess] = useState(false);
-  const [orderId, setOrderId] = useState('');
   const [deliveryCost, setDeliveryCost] = useState(0);
 
   // Mock delivery cost calculation
@@ -147,60 +147,44 @@ const Checkout: React.FC = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
     if (cartItems.length === 0) {
-      alert('Your cart is empty. Please add products before checking out.');
+      toast.error('Your cart is empty. Please add products before checking out.');
       navigate('/products');
       return;
     }
 
     setIsSubmitting(true);
+
+    const orderData = {
+      products: cartItems.map(item => ({
+        product: item.product._id,
+        quantity: item.quantity,
+      })),
+      totalAmount: totalAmount + deliveryCost,
+      shippingAddress: {
+        fullName: formData.fullName,
+        address: formData.isInternationalDelivery ? formData.internationalAddress : formData.deliveryAddress,
+        city: formData.isInternationalDelivery ? formData.internationalCountry : formData.deliveryState,
+        country: formData.isInternationalDelivery ? formData.internationalCountry : "Nigeria",
+        phone: formData.phone,
+      },
+      paymentMethod: formData.paymentMethod,
+    };
+
     try {
-      const result = await API.submitOrder(formData);
-      if (result.success) {
-        setOrderId(result.orderId);
-        setOrderSuccess(true);
-        clearCart(); // Clear cart on successful order
+      const response = await ordersAPI.createOrder(orderData);
+      if (response.data) {
+        toast.success('Order placed successfully! You will receive a confirmation email shortly.');
+        clearCart();
+        navigate('/order-tracking', { state: { orderId: response.data.order._id } });
       }
-    } catch (error) {
-      alert('Order submission failed. Please try again.');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Order submission failed. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (orderSuccess) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-12 h-12 text-green-600" />
-          </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Order Placed Successfully!</h2>
-          <p className="text-gray-600 mb-6">
-            Your order has been placed successfully. You will receive a confirmation email shortly.
-          </p>
-          <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-gray-600 mb-2">Your Order ID:</p>
-            <p className="text-2xl font-bold text-green-700">{orderId}</p>
-          </div>
-          <p className="text-sm text-gray-600 mb-6">
-            You can track your order status using the provided Order ID.
-          </p>
-          <button
-            onClick={() => navigate('/order-tracking')}
-            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
-          >
-            Track My Order
-          </button>
-          <button
-            onClick={() => navigate('/products')}
-            className="w-full bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400 transition mt-4"
-          >
-            Continue Shopping
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 py-8 px-4">

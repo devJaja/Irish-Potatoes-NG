@@ -15,162 +15,23 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-const mockProducts: Product[] = [
-  {
-    _id: '1',
-    name: "Premium Irish Potatoes",
-    description: "Fresh, high-quality Irish potatoes from Jos Plateau. Perfect for cooking and frying.",
-    price: 15000,
-    category: "fresh",
-    weight: "50kg",
-    stock: 100,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: [
-      { minQuantity: 5, discount: 5 },
-      { minQuantity: 10, discount: 10 }
-    ]
-  },
-  {
-    _id: '2',
-    name: "Small Irish Potatoes",
-    description: "Perfect size for home cooking. Fresh from Jos farms.",
-    price: 8000,
-    category: "fresh",
-    weight: "25kg",
-    stock: 150,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: [
-      { minQuantity: 10, discount: 8 }
-    ]
-  },
-  {
-    _id: '3',
-    name: "Irish Potato Seeds",
-    description: "High-quality potato seeds for farming. Certified variety.",
-    price: 25000,
-    category: "seeds",
-    weight: "10kg",
-    stock: 50,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: [
-      { minQuantity: 3, discount: 15 }
-    ]
-  },
-  {
-    _id: '4',
-    name: "Washed Irish Potatoes",
-    description: "Cleaned and ready-to-cook Irish potatoes.",
-    price: 16000,
-    category: "fresh",
-    weight: "50kg",
-    stock: 80,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: []
-  },
-  {
-    _id: '5',
-    name: "Processed Potato Flour",
-    description: "Finely ground potato flour for various culinary uses.",
-    price: 5000,
-    category: "processed",
-    weight: "5kg",
-    stock: 200,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: []
-  },
-  {
-    _id: '6',
-    name: "Connect Irish Potatoes",
-    description: "A popular variety of Irish potatoes, known for their versatility and good yield. Great for mashing and boiling.",
-    price: 18000,
-    category: "fresh",
-    weight: "50kg",
-    stock: 75,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: [
-      { minQuantity: 5, discount: 7 },
-      { minQuantity: 10, discount: 12 }
-    ]
-  },
-  {
-    _id: '7',
-    name: "Marabel Irish Potatoes",
-    description: "Marabel potatoes are famous for their smooth skin and excellent taste. Ideal for salads and roasting.",
-    price: 20000,
-    category: "fresh",
-    weight: "50kg",
-    stock: 60,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: [
-      { minQuantity: 5, discount: 8 },
-      { minQuantity: 10, discount: 15 }
-    ]
-  },
-  {
-    _id: '8',
-    name: "Nicolas (Yellow) Irish Potatoes",
-    description: "Also known as Yellow potatoes, Nicolas variety is creamy and buttery, perfect for baking and gratins.",
-    price: 19000,
-    category: "fresh",
-    weight: "50kg",
-    stock: 90,
-    images: [],
-    origin: 'Jos Plateau',
-    bulkPricing: [
-      { minQuantity: 5, discount: 6 },
-      { minQuantity: 10, discount: 10 }
-    ]
-  }
-];
-
 export const authAPI = {
   register: (data: any) => api.post('/auth/register', data),
   login: (data: any) => api.post('/auth/login', data),
+  forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }),
+  sendOTP: (email: string) => api.post('/auth/send-otp', { email }),
+  resetPassword: (token: string, newPassword: string) => api.post(`/auth/reset-password/${token}`, { password: newPassword }),
 };
 
 export const productsAPI = {
   getProducts: async (params?: any) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500)); 
-    
-    let filteredProducts = [...mockProducts];
-
-    if (params.search) {
-      filteredProducts = filteredProducts.filter(product =>
-        product.name.toLowerCase().includes(params.search.toLowerCase())
-      );
-    }
-
-    if (params.category) {
-      filteredProducts = filteredProducts.filter(product =>
-        product.category === params.category
-      );
-    }
-
-    const page = params.page || 1;
-    const limit = 12; // Assuming a fixed limit for now
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-
-    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-
-    return {
-      data: {
-        products: paginatedProducts,
-        total: filteredProducts.length,
-        totalPages: Math.ceil(filteredProducts.length / limit),
-        currentPage: page,
-      }
-    };
+    const response = await api.get('/products', { params });
+    return response.data;
   },
   getProduct: (id: string) => api.get(`/products/${id}`),
+  createProduct: (productData: Product) => api.post('/products', productData),
+  updateProduct: (id: string, productData: Product) => api.put(`/products/${id}`, productData),
+  deleteProduct: (id: string) => api.delete(`/products/${id}`),
 };
 
 export const ordersAPI = {

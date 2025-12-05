@@ -8,6 +8,7 @@ export interface Product {
   stock: number;
   images: string[];
   origin: string;
+  isActive: boolean;
   bulkPricing: { minQuantity: number; discount: number }[];
 }
 
@@ -15,6 +16,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  role: string;
 }
 
 export interface CartItem {
