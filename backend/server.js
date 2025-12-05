@@ -3,9 +3,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+require('express-async-errors');
+
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+
+// error handler
+const errorHandlerMiddleware = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -19,6 +24,8 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+
+app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

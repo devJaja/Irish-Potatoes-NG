@@ -13,7 +13,11 @@ const userSchema = new mongoose.Schema({
     zipCode: String
   },
   role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
-  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
+  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+  otp: String,
+  otpExpires: Date,
 }, { timestamps: true });
 
 userSchema.pre('save', async function(next) {

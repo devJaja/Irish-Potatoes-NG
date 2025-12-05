@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 const orderSchema = new mongoose.Schema({
+  orderId: {
+    type: String,
+    unique: true,
+    index: true,
+  },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   items: [{
     product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
@@ -30,5 +36,12 @@ const orderSchema = new mongoose.Schema({
   trackingNumber: String,
   deliveryDate: Date
 }, { timestamps: true });
+
+orderSchema.pre('save', function(next) {
+  if (this.isNew) {
+    this.orderId = `NSPD-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+  }
+  next();
+});
 
 module.exports = mongoose.model('Order', orderSchema);
