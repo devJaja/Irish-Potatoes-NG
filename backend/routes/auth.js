@@ -9,6 +9,7 @@ const {
   getPasswordResetEmailHTML,
   getOTPEmailHTML,
 } = require('../utils/email');
+const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 
