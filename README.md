@@ -1,6 +1,6 @@
-# Irish Potatoes E-commerce Platform
+# Plateau Potatoes E-commerce Platform
 
-A full-stack e-commerce website for selling Irish potatoes in Nigeria.
+A full-stack e-commerce website for selling Plateau potatoes in Nigeria.
 
 ## Features
 
@@ -56,7 +56,7 @@ npm run dev
 ## Project Structure
 
 ```
-irish-potatoes/
+plateau-potatoes/
 ├── backend/
 │   ├── models/          # Database models
 │   ├── routes/          # API routes
@@ -87,7 +87,7 @@ irish-potatoes/
 
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/irish-potatoes
+MONGODB_URI=mongodb://localhost:27017/plateau-potatoes
 JWT_SECRET=your_jwt_secret_key_here
 PAYSTACK_SECRET_KEY=your_paystack_secret_key
 EMAIL_HOST=smtp.gmail.com

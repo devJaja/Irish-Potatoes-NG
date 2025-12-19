@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ShoppingCart, LogOut, User as UserIcon } from 'lucide-react';
+import { Menu, X, ShoppingCart, LogOut, User as UserIcon, Edit } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
@@ -26,7 +26,7 @@ const Header: React.FC = () => {
     <header className="bg-white text-gray-800 p-4 shadow-md sticky top-0 z-40">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold text-green-700">
-          Irish Potatoes NG
+          Plateau Potatoes NG
         </Link>
         <nav className="hidden md:flex items-center space-x-6">
           <Link to="/" className="hover:text-green-600 transition-colors duration-200">Home</Link>
@@ -47,6 +47,19 @@ const Header: React.FC = () => {
               <Link to="/account" className="flex items-center hover:text-green-600 transition-colors duration-200">
                 <UserIcon className="w-5 h-5 mr-1" /> Account
               </Link>
+              {user?.role === 'admin' && (
+                <>
+                  <Link to="/admin/products" className="flex items-center hover:text-green-600 transition-colors duration-200">
+                    <Edit className="w-5 h-5 mr-1" /> Admin Dashboard
+                  </Link>
+                  <Link to="/admin/products" className="flex items-center hover:text-green-600 transition-colors duration-200">
+                    <Edit className="w-5 h-5 mr-1" /> Admin Products
+                  </Link>
+                  <Link to="/admin/orders" className="flex items-center hover:text-green-600 transition-colors duration-200">
+                    <Edit className="w-5 h-5 mr-1" /> Admin Orders
+                  </Link>
+                </>
+              )}
               <button
                 onClick={handleLogout}
                 className="flex items-center text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-100 px-3 py-1 rounded"
@@ -93,6 +106,19 @@ const Header: React.FC = () => {
               <Link to="/account" className="text-4xl font-bold text-white hover:text-green-400 transition-colors duration-200 flex items-center" onClick={toggleMobileMenu}>
                 <UserIcon className="w-8 h-8 mr-2" /> Account
               </Link>
+              {user?.role === 'admin' && (
+                <>
+                  <Link to="/admin/products" className="text-4xl font-bold text-white hover:text-green-400 transition-colors duration-200 flex items-center" onClick={toggleMobileMenu}>
+                    <Edit className="w-8 h-8 mr-2" /> Admin Dashboard
+                  </Link>
+                  <Link to="/admin/products" className="text-4xl font-bold text-white hover:text-green-400 transition-colors duration-200 flex items-center" onClick={toggleMobileMenu}>
+                    <Edit className="w-8 h-8 mr-2" /> Admin Products
+                  </Link>
+                  <Link to="/admin/orders" className="text-4xl font-bold text-white hover:text-green-400 transition-colors duration-200 flex items-center" onClick={toggleMobileMenu}>
+                    <Edit className="w-8 h-8 mr-2" /> Admin Orders
+                  </Link>
+                </>
+              )}
               <button
                 onClick={handleLogout}
                 className="text-4xl font-bold text-red-400 hover:text-red-500 transition-colors duration-200 flex items-center"

@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const Product = require('./models/Product');
+const User = require('./models/User'); // Import the User model
 require('dotenv').config({ path: __dirname + '/.env' });
 
 const sampleProducts = [
   {
-    name: "Premium Irish Potatoes",
-    description: "Fresh, high-quality Irish potatoes from Jos Plateau. Perfect for cooking and frying.",
+    name: "Premium Plateau Potatoes",
+    description: "Fresh, high-quality Plateau potatoes from Jos Plateau. Perfect for cooking and frying.",
     price: 15000,
     category: "fresh",
     weight: "50kg",
@@ -17,7 +18,7 @@ const sampleProducts = [
     ]
   },
   {
-    name: "Small Irish Potatoes",
+    name: "Small Plateau Potatoes",
     description: "Perfect size for home cooking. Fresh from Jos farms.",
     price: 8000,
     category: "fresh",
@@ -29,7 +30,7 @@ const sampleProducts = [
     ]
   },
   {
-    name: "Irish Potato Seeds",
+    name: "Plateau Potato Seeds",
     description: "High-quality potato seeds for farming. Certified variety.",
     price: 25000,
     category: "seeds",
@@ -47,10 +48,26 @@ async function seedDatabase() {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB');
     
+    // Clear existing data
     await Product.deleteMany({});
+    await User.deleteMany({}); // Also clear users
+
+    // Insert sample products
     await Product.insertMany(sampleProducts);
+    console.log('Sample products inserted successfully');
+
+    // Create a default admin user
+    const adminUser = new User({
+      name: "Admin User",
+      email: "admin@example.com",
+      password: "adminpassword", // The password will be hashed by the pre-save hook in the User model
+      phone: "08012345678",
+      role: "admin"
+    });
+    await adminUser.save();
+    console.log('Admin user created successfully');
     
-    console.log('Sample data inserted successfully');
+    console.log('Database seeded successfully');
     process.exit(0);
   } catch (error) {
     console.error('Error seeding database:', error);

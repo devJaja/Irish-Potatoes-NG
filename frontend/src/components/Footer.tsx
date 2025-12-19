@@ -11,9 +11,9 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Company Info */}
           <div className="mb-6 md:mb-0">
-            <h3 className="text-xl font-bold text-white mb-4">Irish Potatoes NG</h3>
+            <h3 className="text-xl font-bold text-white mb-4">Plateau Potatoes NG</h3>
             <p className="text-sm">
-              Your trusted source for premium Irish potatoes, delivered fresh to your doorstep.
+              Your trusted source for premium Plateau potatoes, delivered fresh to your doorstep.
               Quality and freshness guaranteed for homes and businesses across Nigeria.
             </p>
           </div>
@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
           {/* Contact & Social */}
           <div>
             <h3 className="text-lg font-bold text-white mb-4">Connect With Us</h3>
-            <p className="text-sm mb-4">Email: info@irishpotatoesng.com</p>
+            <p className="text-sm mb-4">Email: info@plateaupotatoesng.com</p>
             <div className="flex space-x-4">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
                 <Facebook size={24} />
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm">
-          <p>&copy; {currentYear} Irish Potatoes NG. All rights reserved.</p>
+          <p>&copy; {currentYear} Plateau Potatoes NG. All rights reserved.</p>
         </div>
       </div>
     </footer>

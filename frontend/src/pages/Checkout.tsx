@@ -155,19 +155,22 @@ const Checkout: React.FC = () => {
     setIsSubmitting(true);
 
     const orderData = {
-      products: cartItems.map(item => ({
+      // 1. RENAME `products` to `items` to match backend
+      items: cartItems.map(item => ({
         product: item.product._id,
         quantity: item.quantity,
       })),
-      totalAmount: totalAmount + deliveryCost,
+      // 2. RESTRUCTURE `shippingAddress` to match backend model
       shippingAddress: {
-        fullName: formData.fullName,
-        address: formData.isInternationalDelivery ? formData.internationalAddress : formData.deliveryAddress,
-        city: formData.isInternationalDelivery ? formData.internationalCountry : formData.deliveryState,
-        country: formData.isInternationalDelivery ? formData.internationalCountry : "Nigeria",
+        street: formData.isInternationalDelivery ? formData.internationalAddress : formData.deliveryAddress,
+        city: formData.isInternationalDelivery ? formData.internationalCountry : formData.deliveryState, // Note: FE 'city' maps to BE 'state' for Nigeria
+        state: formData.isInternationalDelivery ? '' : formData.deliveryState,
+        zipCode: '', // This field is in the BE model but not the FE form
         phone: formData.phone,
       },
-      paymentMethod: formData.paymentMethod,
+      // 3. REMOVE fields the backend calculates or doesn't use on creation
+      // totalAmount is recalculated on the backend for security
+      // paymentMethod is not used in the Order creation schema
     };
 
     try {
@@ -194,7 +197,7 @@ const Checkout: React.FC = () => {
         {cartItems.length === 0 ? (
           <div className="text-center py-10">
             <h2 className="text-2xl font-semibold text-gray-700">Your cart is empty!</h2>
-            <p className="text-gray-500 mt-2">Add some delicious Irish potatoes to your cart to proceed to checkout.</p>
+            <p className="text-gray-500 mt-2">Add some delicious Plateau potatoes to your cart to proceed to checkout.</p>
             <button
               onClick={() => navigate('/products')}
               className="mt-6 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition"

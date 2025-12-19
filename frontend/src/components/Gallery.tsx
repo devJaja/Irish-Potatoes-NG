@@ -7,7 +7,7 @@ interface GalleryImage {
 }
 
 const images: GalleryImage[] = [
-  { id: 1, title: 'Fresh Irish Potatoes', color: '#8B4513' },
+  { id: 1, title: 'Fresh Plateau Potatoes', color: '#8B4513' },
   { id: 2, title: 'Jos Plateau Farm', color: '#2d5016' },
   { id: 3, title: 'Quality Sorting', color: '#a8d08d' },
   { id: 4, title: 'Bulk Packaging', color: '#6B8E23' },

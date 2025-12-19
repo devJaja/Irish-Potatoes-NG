@@ -29,6 +29,14 @@ export const authAPI = {
   }),
 };
 
+export const uploadAPI = {
+  uploadProductImages: (formData: FormData) => api.post('/upload/products', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }),
+};
+
 export const productsAPI = {
   getProducts: async (params?: any) => {
     const response = await api.get('/products', { params });
@@ -36,7 +44,7 @@ export const productsAPI = {
   },
   getProduct: (id: string) => api.get(`/products/${id}`),
   createProduct: (productData: Product) => api.post('/products', productData),
-  updateProduct: (id: string, productData: Product) => api.put(`/products/${id}`, productData),
+  updateProduct: (id: string, productData: Partial<Product>) => api.put(`/products/${id}`, productData),
   deleteProduct: (id: string) => api.delete(`/products/${id}`),
 };
 
@@ -45,6 +53,14 @@ export const ordersAPI = {
   getOrder: (id: string) => api.get(`/orders/${id}`),
   getUsersOrders: async () => {
     const response = await api.get('/orders');
+    return response.data;
+  },
+  adminGetAllOrders: async () => {
+    const response = await api.get('/orders/admin/all');
+    return response.data;
+  },
+  adminUpdateOrderStatus: async ({ orderId, status }: { orderId: string; status: string }) => {
+    const response = await api.put(`/orders/admin/orders/${orderId}`, { status });
     return response.data;
   },
 };

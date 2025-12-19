@@ -75,7 +75,7 @@ router.post('/register', async (req, res) => {
     // Send welcome email
     await sendEmail({
       to: user.email,
-      subject: 'Welcome to Irish Potatoes!',
+      subject: 'Welcome to Plateau Potatoes!',
       html: getWelcomeEmailHTML(user.name),
     });
 

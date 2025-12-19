@@ -13,7 +13,7 @@ interface GalleryImage {
 const images: GalleryImage[] = [
   { 
     id: 1, 
-    title: 'Fresh Irish Potatoes', 
+    title: 'Fresh Plateau Potatoes', 
     description: 'Premium quality potatoes harvested daily from Jos Plateau',
     category: 'Products',
     color: '#8B4513',

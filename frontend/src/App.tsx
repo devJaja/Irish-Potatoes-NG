@@ -16,6 +16,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import SendOTP from './pages/SendOTP';
 import ResetPassword from './pages/ResetPassword';
 import AdminProducts from './pages/AdminProducts'; // Import the AdminProducts page
+import AdminOrders from './pages/AdminOrders'; // Import the AdminOrders page
+import AdminDashboard from './pages/AdminDashboard'; // Import the AdminDashboard page
 import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute'; // Import ProtectedAdminRoute
@@ -53,7 +55,9 @@ function App() {
                 
                 {/* Protected Admin Routes */}
                 <Route path="/admin" element={<ProtectedAdminRoute />}>
+                  <Route index element={<AdminDashboard />} /> {/* Admin Dashboard as the index route */}
                   <Route path="products" element={<AdminProducts />} />
+                  <Route path="orders" element={<AdminOrders />} />
                 </Route>
               </Routes>
             </main>

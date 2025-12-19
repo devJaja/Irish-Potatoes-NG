@@ -66,7 +66,7 @@ const Home = () => {
           {/* Main Heading with Gradient */}
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 leading-tight">
             <span className="bg-gradient-to-r from-green-700 via-emerald-600 to-green-800 bg-clip-text text-transparent">
-              Fresh Irish Potatoes
+              Fresh Plateau Potatoes
             </span>
             <br />
             <span className="text-gray-800">
@@ -180,7 +180,7 @@ const Home = () => {
               Ready to Experience Fresh?
             </h2>
             <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of satisfied customers enjoying premium Irish potatoes delivered fresh daily
+              Join thousands of satisfied customers enjoying premium Plateau potatoes delivered fresh daily
             </p>
             <a
               href="/products"

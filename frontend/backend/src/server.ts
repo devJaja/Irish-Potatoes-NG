@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/irishpotatoes';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/plateaupotatoes';
 
 // Middleware
 app.use(express.json());
@@ -25,7 +25,7 @@ mongoose.connect(MONGO_URI)
 
 // Basic Route
 app.get('/', (req, res) => {
-  res.send('Irish Potatoes Backend API');
+  res.send('Plateau Potatoes Backend API');
 });
 
 // Start Server
