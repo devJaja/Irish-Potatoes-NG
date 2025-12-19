@@ -15,7 +15,10 @@ const errorHandlerMiddleware = require('./middleware/errorHandler');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://irish-potatoes-ng.vercel.app/',
+  credentials: true,
+}));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI)
