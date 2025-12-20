@@ -81,6 +81,7 @@ const AdminProducts: React.FC = () => {
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget; // Get form reference immediately
     
     let uploadedImageUrls: string[] = [];
 
@@ -106,19 +107,16 @@ const AdminProducts: React.FC = () => {
       }
     }
 
-    const form = e.currentTarget;
-    const formElements = new FormData(form);
-
-    // 2. Construct product data with uploaded image URLs
+    // 2. Construct product data with uploaded image URLs by directly accessing form elements
     const productData: Partial<Product> = {
-      name: formElements.get('name') as string,
-      description: formElements.get('description') as string,
-      price: parseFloat(formElements.get('price') as string),
-      category: formElements.get('category') as 'fresh' | 'processed' | 'seeds',
-      weight: formElements.get('weight') as string,
-      stock: parseInt(formElements.get('stock') as string) || 0,
+      name: (form.elements.namedItem('name') as HTMLInputElement)?.value || '',
+      description: (form.elements.namedItem('description') as HTMLTextAreaElement)?.value || '',
+      price: parseFloat((form.elements.namedItem('price') as HTMLInputElement)?.value || '0'),
+      category: (form.elements.namedItem('category') as HTMLSelectElement)?.value as 'fresh' | 'processed' | 'seeds',
+      weight: (form.elements.namedItem('weight') as HTMLInputElement)?.value || '',
+      stock: parseInt((form.elements.namedItem('stock') as HTMLInputElement)?.value || '0', 10),
       images: [...existingImages, ...uploadedImageUrls], // Combine existing and new images
-      origin: formElements.get('origin') as string,
+      origin: (form.elements.namedItem('origin') as HTMLInputElement)?.value || '',
       isActive: (form.elements.namedItem('isActive') as HTMLInputElement)?.checked || false,
     };
 

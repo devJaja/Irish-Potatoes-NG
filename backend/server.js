@@ -16,7 +16,7 @@ const errorHandlerMiddleware = require('./middleware/errorHandler');
 const app = express();
 
 app.use(cors({
-  origin: ['https://irish-potatoes-ng.vercel.app', 'https://plateau-potatoes-ng.vercel.app'],
+  origin: ['http://localhost:3000', 'https://irish-potatoes-ng.vercel.app', 'https://plateau-potatoes-ng.vercel.app'],
   credentials: true,
 }));
 app.use(express.json());

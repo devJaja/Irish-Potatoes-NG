@@ -68,6 +68,9 @@ const Login: React.FC = () => {
         <p className="text-center mt-4">
           Don't have an account? <Link to="/register" className="text-primary-600 hover:underline">Register</Link>
         </p>
+        <p className="text-center mt-2">
+          <Link to="/forgot-password"className="text-sm text-primary-600 hover:underline">Forgot password?</Link>
+        </p>
       </div>
     </div>
   );

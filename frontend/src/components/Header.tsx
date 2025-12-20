@@ -26,7 +26,7 @@ const Header: React.FC = () => {
     <header className="bg-white text-gray-800 p-4 shadow-md sticky top-0 z-40">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold text-green-700">
-          Plateau Potatoes NG
+          <img src="/logo.png" alt="Plateau Potatoes NG Logo" className="h-8" />
         </Link>
         <nav className="hidden md:flex items-center space-x-6">
           <Link to="/" className="hover:text-green-600 transition-colors duration-200">Home</Link>
