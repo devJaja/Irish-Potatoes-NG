@@ -2,7 +2,7 @@ const express = require('express');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const { authenticateToken, authorizeAdmin } = require('../middleware/auth');
-const { sendOrderEmail } = require('../utils/email');
+const { sendOrderEmail, sendOrderStatusUpdateEmail } = require('../utils/email');
 
 const router = express.Router();
 
@@ -112,14 +112,19 @@ router.put('/admin/orders/:id', authenticateToken, authorizeAdmin, async (req, r
       return res.status(400).json({ message: 'Invalid status.' });
     }
 
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).populate('user', 'name email');
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found.' });
     }
 
-    order.orderStatus = status; // Corrected from order.status
+    order.orderStatus = status;
     await order.save();
+
+    // Send email notification if status is one of the specified
+    if (['processing', 'shipped', 'delivered', 'cancelled'].includes(status)) {
+      await sendOrderStatusUpdateEmail(order, status);
+    }
 
     res.json(order);
   } catch (error) {

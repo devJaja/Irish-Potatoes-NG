@@ -155,10 +155,51 @@ const getOTPEmailHTML = (otp) => `
   </div>
 `;
 
+const getOrderStatusUpdateHTML = (order, status) => {
+  const statusMessages = {
+    processing: "is being processed.",
+    shipped: "has been shipped.",
+    delivered: "has been delivered.",
+    cancelled: "has been cancelled.",
+  };
+
+  const message = statusMessages[status] || `has been updated to ${status}.`;
+
+  return `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <h2 style="color: #4CAF50;">Your Order Status has been Updated!</h2>
+      <p>Hello ${order.user.name},</p>
+      <p>The status of your order #${order.orderId} ${message}</p>
+      
+      <p style="margin-top: 20px;">You can view your order details here: [Link to order page]</p>
+      <br/>
+      <p>Best regards,</p>
+      <p><strong>The Plateau Potatoes Team</strong></p>
+    </div>
+  `;
+};
+
+const sendOrderStatusUpdateEmail = async (order, status) => {
+  if (!order.user || !order.user.email) {
+    console.error("Cannot send order status email, user details are missing.");
+    return;
+  }
+
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: order.user.email,
+    subject: `Your Order #${order.orderId} has been ${status}`,
+    html: getOrderStatusUpdateHTML(order, status),
+  };
+
+  await sendEmail(mailOptions);
+};
+
 module.exports = {
   sendEmail,
   sendOrderEmail, // Export the new function
   getWelcomeEmailHTML,
   getPasswordResetEmailHTML,
   getOTPEmailHTML,
+  sendOrderStatusUpdateEmail,
 };

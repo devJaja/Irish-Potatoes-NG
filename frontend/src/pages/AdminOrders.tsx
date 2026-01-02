@@ -14,7 +14,7 @@ interface Order {
     email: string;
   };
   totalAmount: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  orderStatus: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'; // Changed from status to orderStatus
   createdAt: string;
 }
 
@@ -22,7 +22,7 @@ const AdminOrders: React.FC = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [newStatus, setNewStatus] = useState<Order['status']>('pending');
+  const [newStatus, setNewStatus] = useState<Order['orderStatus']>('pending'); // Changed from status to orderStatus
 
   const { data: orders, isLoading, isError, error } = useQuery<Order[], Error>({
     queryKey: ['adminAllOrders'],
@@ -31,19 +31,32 @@ const AdminOrders: React.FC = () => {
 
   const updateStatusMutation = useMutation({
     mutationFn: ordersAPI.adminUpdateOrderStatus,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['adminAllOrders']); // Refetch orders after successful update
-      toast.success('Order status updated successfully!');
+    onMutate: async (newData: { orderId: string; status: Order['orderStatus'] }) => {
+      await queryClient.cancelQueries({ queryKey: ['adminAllOrders'] });
+      const previousOrders = queryClient.getQueryData(['adminAllOrders']);
+      queryClient.setQueryData(['adminAllOrders'], (oldData: Order[] | undefined) => {
+        if (!oldData) return [];
+        return oldData.map(order =>
+          order._id === newData.orderId ? { ...order, orderStatus: newData.status } : order
+        );
+      });
+      return { previousOrders };
+    },
+    onError: (err, newData, context) => {
+      const errorMessage = (err as any).response?.data?.message || 'Failed to update order status.';
+      toast.error(errorMessage);
+      if (context?.previousOrders) {
+        queryClient.setQueryData(['adminAllOrders'], context.previousOrders);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminAllOrders'] });
       setIsModalOpen(false);
       setSelectedOrder(null);
     },
-    onError: (err: any) => {
-      const errorMessage = err.response?.data?.message || 'Failed to update order status.';
-      toast.error(errorMessage);
-    },
   });
 
-  const getStatusColor = (status: Order['status']) => {
+  const getStatusColor = (status: Order['orderStatus']) => { // Changed from status to orderStatus
     switch (status) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
@@ -62,7 +75,7 @@ const AdminOrders: React.FC = () => {
 
   const handleEditClick = (order: Order) => {
     setSelectedOrder(order);
-    setNewStatus(order.status);
+    setNewStatus(order.orderStatus); // Changed from order.status to order.orderStatus
     setIsModalOpen(true);
   };
 
@@ -77,7 +90,7 @@ const AdminOrders: React.FC = () => {
     setSelectedOrder(null);
   };
 
-  const validStatuses: Order['status'][] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+  const validStatuses: Order['orderStatus'][] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled']; // Changed from status to orderStatus
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -126,8 +139,14 @@ const AdminOrders: React.FC = () => {
                     <p className="text-gray-900 whitespace-no-wrap font-mono text-xs">{order._id}</p>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <p className="text-gray-900 whitespace-no-wrap">{order.user.name}</p>
-                    <p className="text-gray-600 whitespace-no-wrap text-xs">{order.user.email}</p>
+                    {order.user ? (
+                      <>
+                        <p className="text-gray-900 whitespace-no-wrap">{order.user.name}</p>
+                        <p className="text-gray-600 whitespace-no-wrap text-xs">{order.user.email}</p>
+                      </>
+                    ) : (
+                      <p className="text-gray-500 whitespace-no-wrap">User not available</p>
+                    )}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap">
@@ -142,10 +161,10 @@ const AdminOrders: React.FC = () => {
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
                     <span
                       className={`relative inline-block px-3 py-1 font-semibold leading-tight rounded-full ${getStatusColor(
-                        order.status
+                        order.orderStatus
                       )}`}
                     >
-                      <span className="relative">{order.status}</span>
+                      <span className="relative">{order.orderStatus}</span>
                     </span>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
@@ -191,7 +210,7 @@ const AdminOrders: React.FC = () => {
                 id="status-select"
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 value={newStatus}
-                onChange={(e) => setNewStatus(e.target.value as Order['status'])}
+                onChange={(e) => setNewStatus(e.target.value as Order['orderStatus'])}
                 disabled={updateStatusMutation.isLoading}
               >
                 {validStatuses.map((status) => (
