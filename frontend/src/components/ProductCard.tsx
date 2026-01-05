@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import { CheckCircle } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useCart();
+  const { items, addToCart } = useCart();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  const isInCart = items.some(item => item.product._id === product._id);
 
   const handleAddToCart = () => {
     addToCart(product, 1);
@@ -20,6 +23,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow relative">
+      {isInCart && (
+        <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
+          <CheckCircle size={20} />
+        </div>
+      )}
       <div className="h-48 bg-gray-200 flex items-center justify-center">
         {product.images.length > 0 ? (
           <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
@@ -39,10 +47,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-sm text-gray-500">Stock: {product.stock}</span>
           <button
             onClick={handleAddToCart}
-            disabled={product.stock === 0}
+            disabled={product.stock === 0 || isInCart}
             className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 disabled:bg-gray-400"
           >
-            {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+            {product.stock === 0 ? 'Out of Stock' : isInCart ? 'In Cart' : 'Add to Cart'}
           </button>
         </div>
       </div>
