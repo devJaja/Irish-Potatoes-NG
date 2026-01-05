@@ -49,7 +49,7 @@ const Header: React.FC = () => {
               </Link>
               {user?.role === 'admin' && (
                 <>
-                  <Link to="/admin/products" className="flex items-center hover:text-green-600 transition-colors duration-200">
+                  <Link to="/admin" className="flex items-center hover:text-green-600 transition-colors duration-200">
                     <Edit className="w-5 h-5 mr-1" /> Admin Dashboard
                   </Link>
                   <Link to="/admin/products" className="flex items-center hover:text-green-600 transition-colors duration-200">
@@ -108,7 +108,7 @@ const Header: React.FC = () => {
               </Link>
               {user?.role === 'admin' && (
                 <>
-                  <Link to="/admin/products" className="text-4xl font-bold text-white hover:text-green-400 transition-colors duration-200 flex items-center" onClick={toggleMobileMenu}>
+                  <Link to="/admin" className="text-4xl font-bold text-white hover:text-green-400 transition-colors duration-200 flex items-center" onClick={toggleMobileMenu}>
                     <Edit className="w-8 h-8 mr-2" /> Admin Dashboard
                   </Link>
                   <Link to="/admin/products" className="text-4xl font-bold text-white hover:text-green-400 transition-colors duration-200 flex items-center" onClick={toggleMobileMenu}>

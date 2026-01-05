@@ -27,7 +27,7 @@ const AdminProducts: React.FC = () => {
   // Fetch products
   const { data: productsData, isLoading, error } = useQuery({
     queryKey: ['adminProducts'],
-    queryFn: () => productsAPI.getProducts({}),
+    queryFn: () => productsAPI.adminGetAllProducts(),
   });
 
   // Add Product Mutation

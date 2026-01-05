@@ -102,6 +102,36 @@ router.get('/admin/all', authenticateToken, authorizeAdmin, async (req, res) => 
   }
 });
 
+// ADMIN: Get dashboard stats
+router.get('/admin/stats', authenticateToken, authorizeAdmin, async (req, res) => {
+  try {
+    const totalRevenue = await Order.aggregate([
+      { $match: { paymentStatus: 'completed' } },
+      { $group: { _id: null, total: { $sum: '$totalAmount' } } }
+    ]);
+
+    const totalOrders = await Order.countDocuments();
+    const totalProducts = await Product.countDocuments();
+    const pendingOrders = await Order.countDocuments({ orderStatus: 'pending' });
+
+    const recentOrders = await Order.find({})
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .populate('user', 'name');
+
+    res.json({
+      totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
+      totalOrders,
+      totalProducts,
+      pendingOrders,
+      recentOrders
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while fetching admin stats.' });
+  }
+});
+
 // ADMIN: Update order status
 router.put('/admin/orders/:id', authenticateToken, authorizeAdmin, async (req, res) => {
   try {

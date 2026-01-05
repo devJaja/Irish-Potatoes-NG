@@ -46,6 +46,10 @@ export const productsAPI = {
   createProduct: (productData: Product) => api.post('/products', productData),
   updateProduct: (id: string, productData: Partial<Product>) => api.put(`/products/${id}`, productData),
   deleteProduct: (id: string) => api.delete(`/products/${id}`),
+  adminGetAllProducts: async () => {
+    const response = await api.get('/products/admin/all');
+    return response.data;
+  },
 };
 
 export const ordersAPI = {
@@ -63,6 +67,7 @@ export const ordersAPI = {
     const response = await api.put(`/orders/admin/orders/${orderId}`, { status });
     return response.data;
   },
+  getAdminStats: () => api.get('/orders/admin/stats'),
 };
 
 export default api;

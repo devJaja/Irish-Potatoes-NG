@@ -54,6 +54,22 @@ router.get('/:id', async (req, res) => {
   res.json(product);
 });
 
+// ADMIN: Get all products (including inactive ones)
+router.get('/admin/all', [authenticateToken, authorizeAdmin], async (req, res) => {
+  try {
+    const products = await Product.find({})
+      .sort({ createdAt: -1 });
+    const total = await Product.countDocuments({});
+    res.json({
+      products,
+      total,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while fetching all products.' });
+  }
+});
+
 // @route   POST api/products
 // @desc    Create a product
 // @access  Private (Admin only)
