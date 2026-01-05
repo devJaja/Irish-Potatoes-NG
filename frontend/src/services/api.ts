@@ -27,6 +27,7 @@ export const authAPI = {
       'Content-Type': 'multipart/form-data',
     },
   }),
+  removeAvatar: () => api.delete('/auth/avatar'),
 };
 
 export const uploadAPI = {

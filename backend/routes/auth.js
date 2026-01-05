@@ -10,6 +10,7 @@ const {
   getOTPEmailHTML,
 } = require('../utils/email');
 const { authenticateToken } = require('../middleware/auth');
+const cloudinary = require('../utils/cloudinary');
 
 const router = express.Router();
 
@@ -213,6 +214,28 @@ router.post('/send-otp', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error while sending OTP.' });
+  }
+});
+
+// Remove Avatar
+router.delete('/avatar', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+
+    // If user has an avatar, delete it from Cloudinary
+    if (user.avatar) {
+      const publicId = user.avatar.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    user.avatar = undefined;
+    await user.save();
+
+    res.json({ message: 'Avatar removed successfully.', user: { _id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone, address: user.address, avatar: user.avatar } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while removing avatar.' });
   }
 });
 
