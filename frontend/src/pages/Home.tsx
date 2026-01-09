@@ -38,7 +38,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-green-50 to-emerald-50">
       {/* Hero Section with Parallax Effect */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url("/bg-pic.jpeg")' }}>
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div 
@@ -75,9 +75,9 @@ const Home = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl sm:text-2xl md:text-3xl text-gray-700 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-xl sm:text-2xl md:text-3xl text-white mb-12 max-w-3xl mx-auto font-light leading-relaxed">
             Premium quality potatoes from Nigeria's finest farms, 
-            <span className="font-semibold text-green-700"> delivered fresh</span> to your doorstep
+            <span className="font-semibold bg-white text-green-700"> delivered fresh</span> to your doorstep
           </p>
 
           {/* CTA Buttons */}
@@ -103,7 +103,7 @@ const Home = () => {
           </div>
 
           {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-white">
             <div className="flex items-center space-x-2">
               <Shield className="w-5 h-5 text-green-600" />
               <span>Quality Guaranteed</span>
