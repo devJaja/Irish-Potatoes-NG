@@ -6,81 +6,81 @@ interface GalleryImage {
   title: string;
   description: string;
   category: string;
-  color: string;
+  src: string;
   gradient: string;
 }
 
 const images: GalleryImage[] = [
-  { 
-    id: 1, 
-    title: 'Fresh Plateau Potatoes', 
+  {
+    id: 1,
+    title: 'Fresh Plateau Potatoes',
     description: 'Premium quality potatoes harvested daily from Jos Plateau',
     category: 'Products',
-    color: '#8B4513',
+    src: '/nicolas-potatoes.jpeg',
     gradient: 'from-amber-900 to-amber-700'
   },
-  { 
-    id: 2, 
-    title: 'Jos Plateau Farm', 
+  {
+    id: 2,
+    title: 'Jos Plateau Farm',
     description: 'Our sustainable farming practices on the fertile Jos Plateau',
     category: 'Farm',
-    color: '#2d5016',
+    src: '/connect-potato.jpeg',
     gradient: 'from-green-900 to-green-700'
   },
-  { 
-    id: 3, 
-    title: 'Quality Sorting', 
+  {
+    id: 3,
+    title: 'Quality Sorting',
     description: 'Careful selection ensuring only the best potatoes reach you',
     category: 'Process',
-    color: '#a8d08d',
+    src: '/marabel.jpeg',
     gradient: 'from-green-400 to-green-600'
   },
-  { 
-    id: 4, 
-    title: 'Bulk Packaging', 
+  {
+    id: 4,
+    title: 'Bulk Packaging',
     description: 'Professional packaging for wholesale and retail distribution',
     category: 'Packaging',
-    color: '#6B8E23',
+    src: '/marabel-potatotoes.jpeg',
     gradient: 'from-lime-700 to-lime-900'
   },
-  { 
-    id: 5, 
-    title: 'Farm Harvest', 
+  {
+    id: 5,
+    title: 'Farm Harvest',
     description: 'Peak harvest season bringing the freshest produce',
     category: 'Farm',
-    color: '#556B2F',
+    src: '/bg-pic.jpeg',
     gradient: 'from-green-800 to-green-600'
   },
-  { 
-    id: 6, 
-    title: 'Premium Selection', 
+  {
+    id: 6,
+    title: 'Premium Selection',
     description: 'Hand-picked potatoes meeting strict quality standards',
     category: 'Products',
-    color: '#8FBC8F',
+    src: '/marabel.jpeg',
     gradient: 'from-green-300 to-green-500'
   },
-  { 
-    id: 7, 
-    title: 'Storage Facility', 
+  {
+    id: 7,
+    title: 'Storage Facility',
     description: 'Climate-controlled storage maintaining optimal freshness',
     category: 'Facility',
-    color: '#4a5f3a',
+    src: '/connect-potato.jpeg',
     gradient: 'from-slate-700 to-green-800'
   },
-  { 
-    id: 8, 
-    title: 'Distribution Ready', 
+  {
+    id: 8,
+    title: 'Distribution Ready',
     description: 'Ready for delivery across Nigeria',
     category: 'Packaging',
-    color: '#7d8f69',
+    src: '/nicolas-potatoes.jpeg',
     gradient: 'from-green-600 to-green-400'
   },
-  { 
-    id: 9, 
-    title: 'Organic Farming', 
+  {
+    id: 9,
+    title: 'Organic Farming',
     description: 'Chemical-free cultivation for healthier produce',
     category: 'Farm',
-    color: '#3d5a2c',
+    src: '/marabel-potatotoes.jpeg',
     gradient: 'from-green-900 to-lime-700'
   }
 ];
@@ -162,11 +162,10 @@ const GalleryPage: React.FC = () => {
               onMouseLeave={() => setHoveredId(null)}
             >
               {/* Main Card */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${img.gradient} transition-transform duration-700 group-hover:scale-110`}>
+              <div className={`absolute inset-0 transition-transform duration-700 group-hover:scale-110`}>
+                <img src={img.src} alt={img.title} className="w-full h-full object-cover" />
                 {/* Animated Pattern Overlay */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 group-hover:animate-pulse"></div>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
               </div>
 
               {/* Shine Effect on Hover */}
@@ -273,18 +272,15 @@ const GalleryPage: React.FC = () => {
             )}
 
             {/* Modal Content */}
-            <div 
+            <div
               className="relative max-w-5xl w-full animate-scaleIn"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Image Card */}
-              <div 
-                className={`relative h-96 md:h-[600px] rounded-3xl shadow-2xl overflow-hidden bg-gradient-to-br ${selected.gradient} transform transition-all duration-500`}
+              <div
+                className={`relative h-96 md:h-[600px] rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-500`}
               >
-                {/* Animated Background Pattern */}
-                <div className="absolute inset-0 opacity-30">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 animate-pulse"></div>
-                </div>
+                <img src={selected.src} alt={selected.title} className="w-full h-full object-contain" />
 
                 <div className="absolute inset-0 flex items-center justify-center p-8">
                   <div className="text-center max-w-3xl animate-slideUp">
